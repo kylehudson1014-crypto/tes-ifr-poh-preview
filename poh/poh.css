@@ -33,8 +33,11 @@
 .poh-ed label input{width:24px;height:24px}
 /* night modes: dim + red-tint, applied to page and chrome */
 .poh-wrap.dim .poh-view canvas,.poh-wrap.dim .poh-thumbs canvas{filter:brightness(.55)}
-.poh-wrap.red .poh-view canvas,.poh-wrap.red .poh-thumbs canvas{filter:invert(1) sepia(1) saturate(8) hue-rotate(-45deg) brightness(.7)}
+.poh-wrap.red .poh-view canvas,.poh-wrap.red .poh-thumbs canvas{filter:invert(1) url(#pohRedF)}
 .poh-wrap.red .poh-tab{filter:brightness(.6) saturate(.6)}
 .poh-wrap.red{color:#ff6b6b}
 @media (orientation:portrait){.poh-rail{width:118px}.poh-tab{font-size:14px;min-height:52px}}
 @media (max-width:600px){.poh-rail{width:96px}.poh-tab{font-size:12px;padding:4px 6px}}
+
+/* hide the app-wide floating EMERGENCY button on the POH screen; POH has its own */
+body:has(#pohW) .embtn{display:none!important}
