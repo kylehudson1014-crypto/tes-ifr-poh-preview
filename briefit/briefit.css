@@ -1,0 +1,20 @@
+/* Brief It & Fly It module — selectors namespaced .bf- */
+.bf-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.bf-b{min-height:48px;padding:0 16px;font-size:16px;font-weight:700;border-radius:14px;border:1px solid var(--line);background:var(--bez);color:var(--tx);cursor:pointer}
+.bf-b.on{background:var(--brand);border-color:var(--cyn)}.bf-b.rec{background:#b00020;border-color:#ff4040}
+.bf-warn{background:#3a0d0d;border:1px solid #ff4040;color:#ffb3b3;border-radius:10px;padding:8px 12px;font-weight:700;font-size:13px;text-align:center;margin-bottom:8px}
+.bf-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:12px}
+@media(max-width:820px){.bf-grid{grid-template-columns:1fr}}
+.bf-plate{background:#fff;border-radius:10px;padding:6px;overflow:auto}.bf-plate svg,.bf-plate img{width:100%;height:auto;display:block}
+.bf-ck{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid var(--line);border-radius:10px;margin:6px 0;cursor:pointer;background:var(--bez)}
+.bf-ck.ok{border-color:var(--grn);background:#3ce36b1a}.bf-ck.miss{border-color:var(--amb);background:#ffb0201a}
+.bf-ck b{min-width:26px;text-align:center;font-size:18px}
+.bf-ans{display:none;color:var(--cyn);font-size:14px;margin-top:4px}.bf-show .bf-ans{display:block}
+.bf-timer{font:700 28px ui-monospace,Menlo,monospace;color:var(--grn)}
+.bf-fp{font-family:ui-monospace,Menlo,monospace;font-size:15px}
+.bf-ln{padding:12px;border:1px solid var(--line);border-radius:10px;margin:6px 0;background:#0d141c;cursor:pointer;min-height:44px}
+.bf-ln.flag{border-color:var(--amb);background:#ffb02022}
+.bf-ln.hit{border-color:var(--grn);background:#3ce36b22}.bf-ln.wrong{border-color:var(--red);background:#ff404022}.bf-ln.missed{border-color:var(--mag);background:#e040fb22}
+.bf-why{font-family:-apple-system,system-ui,sans-serif;font-size:14px;color:var(--tx);margin-top:6px}
+.bf-score{font-size:22px;font-weight:800;color:var(--grn)}
+.bf-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
