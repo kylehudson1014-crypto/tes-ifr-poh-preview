@@ -7,7 +7,7 @@ const ADMIN_T=new Set(["acft","owner","cloud","setup14","vlib14"]);
 const SHARED_V=new Set(["help","demo"]);
 const SHARED_T=new Set(["sq","sqnew","safety","em"]);
 const NAV={
- train:[["dash","⌂","HOME"],["lessons","▤","LESSONS"],["review","↻","REVIEW"],["lab","🎲","LAB"],["oral","🎙","ORAL"],["acs","▦","ACS"],["logbook","📓","LOGBOOK"],["flights","✈","FLIGHTS"],["tools","🧰","TOOLKIT"],["poh","📖","POH"],["brief","🎯","BRIEF"],["aids","✎","AIDS"],["lib","📚","LIBRARY"],["myacct","💳","ACCOUNT"],["cfii","🔒","CFII"],["help","?","HELP"]],
+ train:[["dash","⌂","HOME"],["lessons","▤","LESSONS"],["review","↻","REVIEW"],["lab","🎲","LAB"],["oral","🎙","ORAL"],["acs","▦","ACS"],["logbook","📓","LOGBOOK"],["flights","✈","FLIGHTS"],["tools","🧰","TOOLKIT"],["poh","📖","POH"],["brief","🎯","BRIEF"],["vis","👁","VISUAL"],["aids","✎","AIDS"],["lib","📚","LIBRARY"],["myacct","💳","ACCOUNT"],["cfii","🔒","CFII"],["help","?","HELP"]],
  admin:[["admin","🏢","HOME"],["sched","📅","SCHEDULE"],["tools/sq","🛠","FLEET"],["tools/acft","🔧","MX"],["acct","💳","ACCOUNTS"],["school","📈","STUDENTS"],["tools/owner","📊","OWNER"],["tools/safety","🛡","SAFETY"],["cloud","👥","MEMBERS"],["tools/setup14","⚙️","SETUP"],["demo","🎬","DEMO"],["help","?","HELP"]]};
 let AREA=(()=>{try{return sessionStorage.getItem("tes-area")||"train"}catch(e){return "train"}})();
 const setArea=a=>{AREA=a;try{sessionStorage.setItem("tes-area",a)}catch(e){}};
