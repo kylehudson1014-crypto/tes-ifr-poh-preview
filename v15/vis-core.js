@@ -3,13 +3,13 @@
 (function(){
 "use strict";
 const LIST=[
- {id:"instr",file:"vis-instr.js",t:"Six-pack & PFD: when the gauges lie",ic:"🛩",les:"L2",acs:"IR.II.A · IR.VII.D",d:"Fly a six-pack and a glass PFD side by side, then fail the vacuum pump, pitot tube or static port and watch exactly what each instrument does."},
+ {id:"instr",file:"vis-instr.js",t:"Six-pack & PFD: when the gauges lie",ic:"🛩",les:"L2",acs:"IR.II.A · IR.II.B · IR.VII.D",d:"Fly a six-pack and a glass PFD side by side, then fail the vacuum pump, pitot tube or static port and watch exactly what each instrument does."},
  {id:"vor",file:"vis-vor.js",t:"VOR, CDI & HSI",ic:"🧭",les:"L3",acs:"IR.V.A",d:"Drag the airplane around a VOR. Live CDI needle, TO/FROM flag, reverse sensing — and why the HSI fixes it."},
  {id:"hold",file:"vis-hold.js",t:"Holding entries & wind",ic:"⭕",les:"L4",acs:"IR.III.B",d:"Pick any heading to the fix and watch the direct, teardrop or parallel entry fly itself — with wind drift and correction."},
  {id:"ils",file:"vis-ils.js",t:"ILS / LPV approach",ic:"🛬",les:"L6",acs:"IR.VI.B",d:"Plan and profile views with live localizer and glideslope needles. Fly it to DA, then land or go missed."},
  {id:"plate",file:"vis-plate.js",t:"Approach plate anatomy",ic:"🗺",les:"P",acs:"IR.VI.A",d:"A SAMPLE plate of a fictional field. Tap any part to learn what it tells you and how to brief it."},
- {id:"compass",file:"vis-compass.js",t:"Compass & gyro errors",ic:"🧲",les:"L2",acs:"IR.II.A",d:"See UNOS turning error and ANDS acceleration error happen on a real-looking compass, plus why the heading indicator needs resetting."},
- {id:"sd",file:"vis-sd.js",t:"Spatial disorientation",ic:"🌀",les:"L2",acs:"IR.I.B · IR.IV.A",d:"The leans, the graveyard spiral and the somatogravic illusion: what the airplane does vs. what your inner ear tells you."}];
+ {id:"compass",file:"vis-compass.js",t:"Compass & gyro errors",ic:"🧲",les:"L2",acs:"IR.II.B",d:"See UNOS turning error and ANDS acceleration error happen on a real-looking compass, plus why the heading indicator needs resetting."},
+ {id:"sd",file:"vis-sd.js",t:"Spatial disorientation",ic:"🌀",les:"L2",acs:"IR.IV.A · IR.IV.B",d:"The leans, the graveyard spiral and the somatogravic illusion: what the airplane does vs. what your inner ear tells you."}];
 const REG={};let CUR=null,LOADING={};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
