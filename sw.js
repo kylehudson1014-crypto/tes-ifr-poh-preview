@@ -1,9 +1,10 @@
-const C='tes-ifr-v13m-sched',A='tes-ifr-audio-1';
-self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./poh/poh.js','./poh/poh.css','./briefit/briefit.js','./briefit/briefit.css','./sched/sched.js','./sched/sched.css','./poh/pdfjs/pdf.min.mjs','./poh/pdfjs/pdf.worker.min.mjs'])).then(()=>self.skipWaiting())));
+const C='tes-ifr-v14',A='tes-ifr-audio-1';
+self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./poh/poh.js','./poh/poh.css','./briefit/briefit.js','./briefit/briefit.css','./sched/sched.js','./sched/sched.css','./v14/v14.css','./v14/acct.js','./v14/logbook.js','./v14/area.js','./poh/pdfjs/pdf.min.mjs','./poh/pdfjs/pdf.worker.min.mjs'])).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C&&x!==A).map(x=>caches.delete(x)))).then(()=>self.clients.claim()).then(()=>{
   /* background: fetch all narration audio for offline use, a few at a time, without blocking the app */
   fetch('./a/index.json').then(r=>r.json()).then(async L=>{const c=await caches.open(A);for(let i=0;i<L.length;i+=4){await Promise.all(L.slice(i,i+4).map(async f=>{const u='./a/'+f;if(!(await c.match(u)))try{const r=await fetch(u);if(r.ok)await c.put(u,r)}catch(e){}}))}}).catch(()=>{})})));
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==location.origin)return;
+  if(u.pathname.includes('/ocr/')){e.respondWith(caches.open(A).then(c=>c.match(e.request,{ignoreSearch:true}).then(r=>r||fetch(e.request).then(n=>{if(n.ok&&n.status===200)c.put(e.request,n.clone());return n}))));return}
   if(u.pathname.includes('/a/')){e.respondWith(caches.open(A).then(c=>c.match(e.request,{ignoreSearch:true}).then(r=>r||fetch(e.request).then(n=>{if(n.ok&&n.status===200)c.put(e.request,n.clone());return n}))));return}
   e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(r=>r||fetch(e.request)))});
 /* Optional Instant alerts add-on (Firebase Blaze): show pushes and open the app on tap */
