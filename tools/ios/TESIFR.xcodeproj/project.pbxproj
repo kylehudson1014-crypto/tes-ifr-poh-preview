@@ -1,0 +1,269 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		20BE32740C8FCDA41102030B /* TESIFRApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0157BD6F0744EB74C011EE6 /* TESIFRApp.swift */; };
+		9044207E6B820B1257DA94C4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72009B6F0875BAA36C1B4163 /* ContentView.swift */; };
+		E5261729DB403A00B5F043C0 /* AppSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A2AF2C6C39BB4835DF7225 /* AppSchemeHandler.swift */; };
+		F55871CF855E47CE7E3A5D8C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5989DBEAAF8BD81757FEFD73 /* Assets.xcassets */; };
+		883038D49D8880DEB3DA80BC /* docs in Resources */ = {isa = PBXBuildFile; fileRef = 3392D551755A800E02B6F648 /* docs */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		D6E4A9B6646C62FC48BAA6DD /* TESIFR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TESIFR.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0157BD6F0744EB74C011EE6 /* TESIFRApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TESIFRApp.swift; sourceTree = "<group>"; };
+		72009B6F0875BAA36C1B4163 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		89A2AF2C6C39BB4835DF7225 /* AppSchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSchemeHandler.swift; sourceTree = "<group>"; };
+		5989DBEAAF8BD81757FEFD73 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3392D551755A800E02B6F648 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = docs; path = ../docs; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2609344FA76552A3EDB5D460 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FAD58DE7366495DB4650CFEF = {
+			isa = PBXGroup;
+			children = (
+				6CB77480E0F0214B7AC1764B /* TESIFR */,
+				3392D551755A800E02B6F648 /* docs */,
+				57D633D82F546DE1C3BD5C7B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6CB77480E0F0214B7AC1764B /* TESIFR */ = {
+			isa = PBXGroup;
+			children = (
+				F0157BD6F0744EB74C011EE6 /* TESIFRApp.swift */,
+				72009B6F0875BAA36C1B4163 /* ContentView.swift */,
+				89A2AF2C6C39BB4835DF7225 /* AppSchemeHandler.swift */,
+				5989DBEAAF8BD81757FEFD73 /* Assets.xcassets */,
+			);
+			path = TESIFR;
+			sourceTree = "<group>";
+		};
+		57D633D82F546DE1C3BD5C7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D6E4A9B6646C62FC48BAA6DD /* TESIFR.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		058DE92451763E137316DF3A /* TESIFR */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B90BB0BCEC1B76ED371DFC4 /* Build configuration list for PBXNativeTarget "TESIFR" */;
+			buildPhases = (
+				25D902C24283AB8CFBAC54DF /* Sources */,
+				2609344FA76552A3EDB5D460 /* Frameworks */,
+				9B207167E5381C47682C6B4F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TESIFR;
+			productName = TESIFR;
+			productReference = D6E4A9B6646C62FC48BAA6DD /* TESIFR.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4DC844ABCCFC0D132D087C1C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					058DE92451763E137316DF3A = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = D766599C7DEFAE129FEB27F2 /* Build configuration list for PBXProject "TESIFR" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FAD58DE7366495DB4650CFEF;
+			productRefGroup = 57D633D82F546DE1C3BD5C7B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				058DE92451763E137316DF3A /* TESIFR */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9B207167E5381C47682C6B4F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F55871CF855E47CE7E3A5D8C /* Assets.xcassets in Resources */,
+				883038D49D8880DEB3DA80BC /* docs in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		25D902C24283AB8CFBAC54DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				20BE32740C8FCDA41102030B /* TESIFRApp.swift in Sources */,
+				9044207E6B820B1257DA94C4 /* ContentView.swift in Sources */,
+				E5261729DB403A00B5F043C0 /* AppSchemeHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1BFEF058FC915816555210CC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A6120C4C5D30B57B4566307F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1A4784061330F2D212DD116C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "PPA IFR";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Take a photo of a logbook page so it can be turned into entries you review before saving.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Practice oral-exam answers out loud and use voice features in Brief It.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Choose a photo of a logbook page or chart to use in a lesson.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Turn your spoken oral-exam answers into text so you can review them.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tacticaledge.tesifr;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E8360BD69633DC4B3024D425 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "PPA IFR";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Take a photo of a logbook page so it can be turned into entries you review before saving.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Practice oral-exam answers out loud and use voice features in Brief It.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Choose a photo of a logbook page or chart to use in a lesson.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Turn your spoken oral-exam answers into text so you can review them.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tacticaledge.tesifr;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D766599C7DEFAE129FEB27F2 /* Build configuration list for PBXProject "TESIFR" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1BFEF058FC915816555210CC /* Debug */,
+				A6120C4C5D30B57B4566307F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B90BB0BCEC1B76ED371DFC4 /* Build configuration list for PBXNativeTarget "TESIFR" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A4784061330F2D212DD116C /* Debug */,
+				E8360BD69633DC4B3024D425 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4DC844ABCCFC0D132D087C1C /* Project object */;
+}

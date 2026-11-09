@@ -2,27 +2,55 @@
    Every old hash route still works; it simply lands in the area it belongs to. */
 (function(){
 "use strict";
-const ADMIN_V=new Set(["admin","sched","school","signs","ckrec","roi","compare","cloud","setup","acct"]);
+const BUILD=(window.TES_BUILD||"combined");/* v16: "admin" = web School Admin portal, "lessons" = IFR Lessons app, "combined" = test copy */
+const ADMIN_V=new Set(["admin","sched","school","signs","ckrec","roi","compare","cloud","setup","acct","lbq","data16"]);
+if(BUILD==="lessons")ADMIN_V.delete("cloud");
 const ADMIN_T=new Set(["acft","owner","cloud","setup14","vlib14"]);
 const SHARED_V=new Set(["help","demo"]);
 const SHARED_T=new Set(["sq","sqnew","safety","em"]);
 const NAV={
- train:[["dash","⌂","HOME"],["lessons","▤","LESSONS"],["review","↻","REVIEW"],["lab","🎲","LAB"],["oral","🎙","ORAL"],["acs","▦","ACS"],["logbook","📓","LOGBOOK"],["flights","✈","FLIGHTS"],["tools","🧰","TOOLKIT"],["poh","📖","POH"],["brief","🎯","BRIEF"],["vis","👁","VISUAL"],["aids","✎","AIDS"],["lib","📚","LIBRARY"],["myacct","💳","ACCOUNT"],["cfii","🔒","CFII"],["help","?","HELP"]],
- admin:[["admin","🏢","HOME"],["sched","📅","SCHEDULE"],["tools/sq","🛠","FLEET"],["tools/acft","🔧","MX"],["acct","💳","ACCOUNTS"],["school","📈","STUDENTS"],["tools/owner","📊","OWNER"],["tools/safety","🛡","SAFETY"],["cloud","👥","MEMBERS"],["tools/setup14","⚙️","SETUP"],["demo","🎬","DEMO"],["help","?","HELP"]]};
-let AREA=(()=>{try{return sessionStorage.getItem("tes-area")||"train"}catch(e){return "train"}})();
-const setArea=a=>{AREA=a;try{sessionStorage.setItem("tes-area",a)}catch(e){}};
+ train:[["dash","⌂","HOME"],["lessons","▤","LESSONS"],["review","↻","REVIEW"],["lab","🎲","LAB"],["oral","🎙","ORAL"],["acs","▦","ACS"],["logbook","📓","LOGBOOK"],["flights","✈","FLIGHTS"],["tools","🧰","TOOLKIT"],["poh","📖","POH"],["brief","🎯","BRIEF"],["vis","👁","VISUAL"],["aids","✎","AIDS"],["lib","📚","LIBRARY"],["myacct","💳","ACCOUNT"],["cfii","🔒","CFII"],["help","?","HELP"]].concat(BUILD==="lessons"?[["cloud","☁️","SYNC"]]:[]),
+ admin:[["admin","🏢","HOME"],["sched","📅","SCHEDULE"],["tools/sq","🛠","FLEET"],["tools/acft","🔧","MX"],["acct","💳","ACCOUNTS"],["school","📈","STUDENTS"],["tools/owner","📊","OWNER"],["tools/safety","🛡","SAFETY"],["lbq","📓","LOGBOOK Q"],["cloud","👥","MEMBERS"],["data16","🗄","DATA"],["tools/setup14","⚙️","SETUP"],["demo","🎬","DEMO"],["help","?","HELP"]]};
+/* v16 role-based admin nav: which admin routes each signed-in role may open */
+const ROLE_NAV={admin:null,cfii:["admin","sched","lbq","tools/sq","tools/acft","school","signs","help","demo"],maintenance:["admin","tools/sq","tools/acft","help"],safety:["admin","tools/safety","tools/sq","help"]};
+const STAFF_ROLES=["admin","cfii","maintenance","safety"];
+const fbRole=()=>{try{return (typeof fbOn==="function"&&fbOn()&&S.fb.role)||""}catch(e){return ""}};
+const demoAdm=()=>{try{return !!(S.tk&&S.tk.demo&&sessionStorage.getItem("tes-demo16")==="1")}catch(e){return false}};
+const effRole=()=>demoAdm()?"admin":fbRole();
+function routeOK(r){const role=effRole();if(BUILD!=="admin")return true;if(!role||role==="admin")return true;const L=ROLE_NAV[role];if(!L)return false;const k=r.v+(r.a?"/"+r.a:"");return L.includes(k)||L.includes(r.v)}
+let AREA=BUILD==="admin"?"admin":BUILD==="lessons"?"train":(()=>{try{return sessionStorage.getItem("tes-area")||"train"}catch(e){return "train"}})();
+const setArea=a=>{if(BUILD==="admin")a="admin";if(BUILD==="lessons")a="train";AREA=a;try{sessionStorage.setItem("tes-area",a)}catch(e){}};
 function areaOf(r){const v=r.v||"dash",a=r.a||"";
  if(ADMIN_V.has(v))return "admin";if(v==="tools"&&ADMIN_T.has(a))return "admin";
  if(SHARED_V.has(v)||(v==="tools"&&SHARED_T.has(a))||v==="emergency")return AREA;return "train"}
-const staff=()=>{try{return typeof staffOK==="function"?staffOK():!!CFII}catch(e){return false}};
+const staff=()=>{if(BUILD==="admin"){const r=effRole();return STAFF_ROLES.includes(r)}try{return typeof staffOK==="function"?staffOK():!!CFII}catch(e){return false}};
 const esc2=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-function bar(){let b=document.getElementById("areaBar");const h=document.querySelector("header.top");
+function bar(){if(BUILD!=="combined")return bar16();let b=document.getElementById("areaBar");const h=document.querySelector("header.top");
  if(!b&&h){b=document.createElement("div");b.id="areaBar";b.className="ar-bar";h.insertAdjacentElement("afterend",b)}
  if(!b)return;const lock=AREA==="admin"&&staff();
  b.innerHTML=`<div class="ar-seg" role="tablist" aria-label="App area"><button role="tab" class="${AREA==="train"?"on":""}" onclick="AREA14.to('train')">🎓 IFR Training</button><button role="tab" class="${AREA==="admin"?"on adm":""}" onclick="AREA14.to('admin')">🏢 School Admin${staff()?"":" 🔒"}</button></div>${lock?`<button class="ar-lock" onclick="AREA14.lock()" title="Lock School Admin">Lock</button>`:""}`;
  document.body.classList.toggle("area-admin",AREA==="admin")}
-function gate(){return `<div class="pnl ar-gate"><div class="ar-gico">🏢</div><h2>School Admin</h2><p>Scheduling, fleet & maintenance, customer accounts, owner report, safety reports and members are for ${esc2((window.SCHOOL||{}).short||"school")} staff.</p>
+function bar16(){let b=document.getElementById("areaBar");const h=document.querySelector("header.top");
+ if(!b&&h){b=document.createElement("div");b.id="areaBar";b.className="ar-bar";h.insertAdjacentElement("afterend",b)}if(!b)return;
+ document.body.classList.toggle("area-admin",AREA==="admin");document.body.classList.add("build-"+BUILD);
+ if(BUILD==="lessons"){b.innerHTML=`<div class="ar-seg one"><button class="on">🎓 IFR Lessons</button></div>`;return}
+ const r=effRole();const who=demoAdm()?`<span class="chip y">DEMO MODE · sample data</span> <button class="ar-lock" onclick="AREA14.demoOff()">Exit demo</button>`:r?`<span class="chip m">${esc2(((S.fb||{}).name)||"")} · ${esc2(({admin:"School admin",cfii:"CFII",maintenance:"Maintenance",safety:"Safety Officer",student:"Student"})[r]||r)}</span> <button class="ar-lock" onclick="AREA14.signOut()">Sign out</button>`:"";
+ b.innerHTML=`<div class="ar-seg one"><button class="on adm">🏢 School Admin portal</button></div>${who}`}
+function gate16(){const r=fbRole();
+ if(r==="student")return `<div class="pnl ar-gate"><div class="ar-gico">🎓</div><h2>This portal is for school staff</h2><p>You're signed in as a student. Your lessons, logbook, bookings and account live in the <b>IFR Lessons</b> app.</p><a class="btn pri" href="${esc2(window.TES_LESSONS_URL||"https://kylehudson1014-crypto.github.io/tes-ifr-lessons/")}">Open IFR Lessons →</a> <button class="btn" onclick="AREA14.signOut()">Sign out</button></div>`;
+ if(r&&!STAFF_ROLES.includes(r))return `<div class="pnl ar-gate"><h2>No admin access</h2><p>Your role (${esc2(r)}) can't open the School Admin portal.</p><button class="btn" onclick="AREA14.signOut()">Sign out</button></div>`;
+ if(r)return `<div class="pnl ar-gate"><h2>Not available for your role</h2><p>Ask your school admin if you need this screen.</p><button class="btn pri" onclick="go('admin')">← Admin home</button></div>`;
+ const f=S.fb||{};
+ return `<div class="pnl ar-gate ar-sign"><div class="ar-gico">🏢</div><h2>${esc2((window.SCHOOL||{}).short||"School")} Admin portal</h2><p class="small mut">Scheduling · accounts & packages · fleet & squawks · owner report · members & roles · logbook review</p>
+ <form onsubmit="event.preventDefault();fbSignIn()"><label>Email<input id="fbE" type="email" autocomplete="username" required></label><label>Password<input id="fbP" type="password" autocomplete="current-password" required></label><button class="btn pri" type="submit">Sign in</button> <button class="btn" type="button" onclick="fbReset()">Forgot password</button></form>
+ <details><summary>New staff member? Join with a school code</summary><label>Your full name<input id="fbN"></label><label>School code (from your admin)<input id="fbC"></label><p class="small mut">Uses the email and password above.</p><button class="btn" type="button" onclick="fbSignUp()">Create account &amp; join</button></details>
+ <p id="fbM" class="small">${esc2(f.msg||"")}</p>
+ <div class="ar-or"><span>or</span></div><button class="btn big" onclick="AREA14.demoOn()">🎬 Explore Demo Mode — no sign-in</button><p class="small mut">Demo Mode uses a SAMPLE school on this device only. Nothing is uploaded.</p></div>`}
+function demoOn(){try{sessionStorage.setItem("tes-demo16","1")}catch(e){}try{if(!S.tk.demo){CFII=true;demoLoad()}}catch(e){}CFII=true;go("admin");render()}
+function demoOff(){try{sessionStorage.removeItem("tes-demo16")}catch(e){}try{if(S.tk.demo&&typeof demoReset==="function"){const c=window.confirm;window.confirm=()=>true;try{demoReset()}finally{window.confirm=c}}}catch(e){}CFII=false;render()}
+function signOut(){try{if(typeof fbOut==="function")fbOut()}catch(e){}CFII=false;render()}
+function gate(){if(BUILD==="admin")return gate16();return `<div class="pnl ar-gate"><div class="ar-gico">🏢</div><h2>School Admin</h2><p>Scheduling, fleet & maintenance, customer accounts, owner report, safety reports and members are for ${esc2((window.SCHOOL||{}).short||"school")} staff.</p>
  <form onsubmit="event.preventDefault();AREA14.unlock()"><input id="arPin" type="password" inputmode="numeric" autocomplete="off" placeholder="Staff PIN" aria-label="Staff PIN"><button class="btn pri" type="submit">Unlock</button></form>
  <p class="small mut">Same PIN as instructor (CFII) mode. Students stay in IFR Training.</p><button class="btn" onclick="AREA14.to('train')">← Back to IFR Training</button></div>`}
 function unlock(){const p=(document.getElementById("arPin")||{}).value||"";let ok=false;try{ok=p===(S.pin||SCHOOL.cfiiPin)}catch(e){}
@@ -60,15 +88,19 @@ function install(){
  if(install.done)return;install.done=1;
  VIEWS.admin=adminHome;VIEWS.__gate14=gate;
  const inner=render;
- window.render=render=function(){let r;try{r=route}catch(e){r={v:"dash"}}const ar=areaOf(r);if(ar!==AREA)setArea(ar);
-  try{SK.length=0;NAV[AREA].forEach(x=>SK.push(x))}catch(e){}
-  const needGate=AREA==="admin"&&!staff()&&r.v!=="help"&&r.v!=="demo"&&!(r.v==="tools"&&SHARED_T.has(r.a||""));
+ window.render=render=function(){let r;try{r=route}catch(e){r={v:"dash"}}let ar=areaOf(r);
+  if(BUILD==="admin"&&ar==="train"){route.v="admin";route.a="";r=route;ar="admin";try{history.replaceState(null,"","#admin")}catch(e){}}
+  if(BUILD==="lessons"&&ar==="admin"){const t=r.v;route.v="dash";route.a="";r=route;ar="train";try{history.replaceState(null,"","#dash")}catch(e){}setTimeout(()=>{if(typeof toast==="function")toast("That's in the School Admin portal")},50)}
+  if(BUILD==="admin"){try{CFII=staff()}catch(e){}}
+  if(ar!==AREA)setArea(ar);
+  try{SK.length=0;NAV[AREA].filter(x=>BUILD!=="admin"||staff()).filter(x=>AREA!=="admin"||BUILD!=="admin"||routeOK({v:x[0].split("/")[0],a:x[0].split("/")[1]||""})).forEach(x=>SK.push(x))}catch(e){}
+  const needGate=BUILD==="admin"?(!staff()||!routeOK(r)):(AREA==="admin"&&!staff()&&r.v!=="help"&&r.v!=="demo"&&!(r.v==="tools"&&SHARED_T.has(r.a||"")));
   const sv=r.v;if(needGate)route.v="__gate14";
   try{inner()}finally{if(needGate)route.v=sv}
   bar();
   /* highlight nav buttons for sub-routes like tools/sq */
   try{const cur=sv+(r.a?"/"+r.a:"");document.querySelectorAll("#sk button").forEach((b,i)=>{const k=SK[i]&&SK[i][0];if(!k)return;if(k.includes("/"))b.classList.toggle("on",cur===k);else if(k==="tools"&&sv==="tools")b.classList.toggle("on",!NAV.admin.some(x=>x[0]===cur))})}catch(e){}
-  if(needGate)setTimeout(()=>{const i=document.getElementById("arPin");if(i)i.focus()},50)};
+  if(needGate)setTimeout(()=>{const i=document.getElementById("arPin")||document.getElementById("fbE");if(i&&!i.value)i.focus()},50)};
 }
-window.AREA14={install,to,unlock,lock,areaOf,get area(){return AREA}};
+window.AREA14={install,to,unlock,lock,areaOf,demoOn,demoOff,signOut,routeOK,effRole,BUILD,get area(){return AREA}};
 })();

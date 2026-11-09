@@ -1,0 +1,221 @@
+rules_version = '2';
+// TES IFR Program — school-scoped, role-based rules.  v16 (Admin portal + Lessons app shared data)
+// Roles: student | cfii | maintenance | safety | admin   (stored in /users/{uid}.role)
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function userPath() { return /databases/$(database)/documents/users/$(request.auth.uid); }
+    function hasProfile() { return signedIn() && exists(userPath()); }
+    function me() { return get(userPath()).data; }
+    function inSchool(s) { return hasProfile() && me().school == s; }
+    function role(s, r) { return inSchool(s) && me().role in r; }
+    function isStaff(s) { return role(s, ['cfii', 'admin']); }
+    function isAdmin(s) { return role(s, ['admin']); }
+    function validRole(r) { return r in ['student', 'cfii', 'maintenance', 'safety', 'admin']; }
+    function canSafety(s) { return role(s, ['safety', 'admin']); }   // Safety Officer + admin/owner
+
+    // ---- One-time school bootstrap -----------------------------------------
+    // Creating a school needs the private setup code below and only works if
+    // the school does not exist yet. After your first admin exists you may
+    // replace the setup check with: allow create: if false;
+    match /schools/{school} {
+      allow create: if signedIn()
+        && !exists(/databases/$(database)/documents/schools/$(school))
+        && request.resource.data.owner == request.auth.uid
+        && request.resource.data.setup == 'PPA-760E3240-CD211D';
+      allow read: if isAdmin(school);
+      allow update, delete: if false;
+
+      // ---- Synced records: /schools/{school}/{kind}/{id} --------------------
+      // Each doc: { uid, sid, kind, updated (int ms), del (bool), json (string) }
+      match /{kind}/{id} {
+        function validDoc() {
+          return request.resource.data.keys().hasOnly(['uid', 'sid', 'kind', 'updated', 'del', 'json'])
+            && request.resource.data.uid is string
+            && request.resource.data.kind == kind
+            && request.resource.data.updated is int
+            && request.resource.data.del is bool
+            && request.resource.data.json is string
+            && request.resource.data.json.size() < 900000;
+        }
+        function studentKind() {
+          return kind in ['log', 'runs', 'sq', 'signs', 'rb', 'risk', 'debr', 'notes', 'perf', 'safety', 'rq', 'vor'];
+        }
+        function mxKind() { return kind in ['sq', 'acft', 'runs', 'vor']; }
+        function allKind() { return studentKind() || kind in ['acft', 'sets']; }
+        function owns() { return resource.data.uid == request.auth.uid; }
+        function willOwn() { return request.resource.data.uid == request.auth.uid; }
+
+        // Safety reports: readable ONLY by the Safety Officer and admin/owner.
+        // Students / Safety Officers: only their own docs, never fleet data or school checklists.
+        allow read: if allKind() && (
+            (kind == 'safety' && canSafety(school))
+            || (kind != 'safety' && (
+                 isStaff(school)
+                 || (role(school, ['maintenance']) && mxKind())
+                 || (role(school, ['student', 'safety']) && studentKind() && owns())
+                 || (inSchool(school) && kind in ['sets', 'acft']))));   // everyone in the school sees fleet + checklists
+
+        allow create: if validDoc() && allKind() && (
+            (kind == 'safety' && inSchool(school) && willOwn())          // a named report, always under the writer's own uid
+            || (kind != 'safety' && (
+                 isStaff(school)
+                 || (role(school, ['maintenance']) && mxKind() && willOwn())
+                 || (role(school, ['student', 'safety']) && studentKind() && willOwn()
+                     && (kind != 'log' || id == request.auth.uid)))));
+
+        allow update: if validDoc() && allKind() && (
+            (kind == 'safety' && canSafety(school))                     // status workflow
+            || (kind != 'safety' && (
+                 isStaff(school)
+                 || (role(school, ['maintenance']) && mxKind())
+                 || (role(school, ['student', 'safety']) && studentKind() && owns() && willOwn()))));
+
+        allow delete: if isAdmin(school);
+      }
+
+      // ---- Anonymous safety drop box: /schools/{school}/safebox/{id} --------
+      // No uid / sid field is allowed, so no name or ID is stored with the report.
+      // Any school member may create; nobody but the Safety Officer and admin/owner
+      // can read, so the writer cannot read it back. Never overwritten by the writer.
+      match /safebox/{id} {
+        function boxDoc() {
+          return request.resource.data.keys().hasOnly(['kind', 'updated', 'del', 'json'])
+            && request.resource.data.kind == 'safebox'
+            && request.resource.data.updated is int
+            && request.resource.data.del == false
+            && request.resource.data.json is string
+            && request.resource.data.json.size() < 20000;
+        }
+        allow create: if inSchool(school) && boxDoc();
+        allow read: if canSafety(school);
+        allow update: if canSafety(school) && boxDoc();
+        allow delete: if isAdmin(school);
+      }
+
+      // ---- Optional add-on (Blaze): push tokens, alert routing, server escalation log ----
+      match /push/{uid} {
+        allow get, delete: if signedIn() && request.auth.uid == uid;
+        allow create, update: if inSchool(school) && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['uid', 'token', 'as', 'updated'])
+          && request.resource.data.uid == uid
+          && request.resource.data.as in ['maintenance', 'chief', 'owner']
+          && request.resource.data.token is string;
+      }
+      match /config/{doc} {
+        allow read: if inSchool(school);
+        allow write: if isAdmin(school);
+      }
+      match /escal/{id} {
+        allow read: if isStaff(school) || role(school, ['maintenance']);
+        allow write: if false;      // written only by Cloud Functions (Admin SDK)
+      }
+      match /alertlog/{id} {
+        allow read: if isAdmin(school);
+        allow write: if false;
+      }
+
+      // ==== v16: shared data for the School Admin portal + IFR Lessons app ====
+      // Same envelope as above; 'rv' (review status) is only used by logbook entries.
+      function env16(k) {
+        return request.resource.data.keys().hasOnly(['uid', 'sid', 'kind', 'updated', 'del', 'json', 'rv'])
+          && request.resource.data.uid is string
+          && request.resource.data.kind == k
+          && request.resource.data.updated is int
+          && request.resource.data.del is bool
+          && request.resource.data.json is string
+          && request.resource.data.json.size() < 900000;
+      }
+      function noRv() { return !('rv' in request.resource.data); }
+
+      // Bookings (Scheduling). CFII/admin write; a student reads only bookings tagged with their uid.
+      match /book/{id} {
+        allow read: if isStaff(school)
+          || (role(school, ['student']) && resource.data.uid == request.auth.uid);
+        allow create, update: if env16('book') && noRv() && isStaff(school);
+        allow delete: if isAdmin(school);
+      }
+      // Customer accounts (package, usage, ledger). Admin only; a student reads only their own.
+      match /acct/{id} {
+        allow read: if isAdmin(school)
+          || (role(school, ['student']) && resource.data.uid == request.auth.uid);
+        allow create, update: if env16('acct') && noRv() && isAdmin(school);
+        allow delete: if isAdmin(school);
+      }
+      // Logbook entries. A student creates their own as 'pending' and may edit while pending/returned.
+      // Only CFII/admin can approve or return. Approved entries are locked for the student.
+      match /lbk/{id} {
+        allow read: if isStaff(school)
+          || (inSchool(school) && resource.data.uid == request.auth.uid);
+        allow create: if env16('lbk') && inSchool(school)
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.rv == 'pending';
+        allow update: if env16('lbk') && (
+            (isStaff(school)
+              && request.resource.data.uid == resource.data.uid
+              && request.resource.data.rv in ['pending', 'approved', 'returned'])
+            || (inSchool(school)
+              && resource.data.uid == request.auth.uid
+              && request.resource.data.uid == request.auth.uid
+              && resource.data.rv in ['pending', 'returned']
+              && request.resource.data.rv == 'pending'));
+        allow delete: if isAdmin(school);
+      }
+      // Visual-lesson progress, one doc per student (doc id = their uid).
+      match /prog/{id} {
+        allow read: if isStaff(school) || (inSchool(school) && id == request.auth.uid);
+        allow create, update: if env16('prog') && noRv() && inSchool(school)
+          && id == request.auth.uid && request.resource.data.uid == request.auth.uid;
+        allow delete: if isAdmin(school);
+      }
+      // Member directory (names ↔ uids) so CFIIs can link bookings to students. Admin publishes it.
+      match /dir/{id} {
+        allow read: if isStaff(school);
+        allow create, update: if env16('dir') && noRv() && isAdmin(school);
+        allow delete: if isAdmin(school);
+      }
+    }
+
+    // ---- User profiles -----------------------------------------------------
+    match /users/{uid} {
+      function codeDoc() { return get(/databases/$(database)/documents/codes/$(request.resource.data.code)).data; }
+      function joinByCode() {
+        return request.resource.data.code is string
+          && exists(/databases/$(database)/documents/codes/$(request.resource.data.code))
+          && codeDoc().school == request.resource.data.school
+          && codeDoc().role == request.resource.data.role
+          && codeDoc().exp > request.time.toMillis();
+      }
+      function bootstrapAdmin() {
+        return request.resource.data.role == 'admin'
+          && get(/databases/$(database)/documents/schools/$(request.resource.data.school)).data.owner == request.auth.uid;
+      }
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin(resource.data.school));
+      allow create: if signedIn() && request.auth.uid == uid
+        && validRole(request.resource.data.role)
+        && request.resource.data.keys().hasOnly(['school', 'role', 'name', 'email', 'code', 'created'])
+        && (joinByCode() || bootstrapAdmin());
+      // A user may edit their own name/email only; admins may change roles inside their school.
+      allow update: if signedIn() && (
+          (request.auth.uid == uid
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'email']))
+          || (isAdmin(resource.data.school)
+            && request.resource.data.school == resource.data.school
+            && validRole(request.resource.data.role)));
+      allow delete: if signedIn() && isAdmin(resource.data.school);
+    }
+
+    // ---- Access codes (admin-issued, one per role, with expiry) -------------
+    match /codes/{code} {
+      allow get: if signedIn();          // must know the exact code
+      allow list: if false;              // codes cannot be enumerated
+      allow create: if isAdmin(request.resource.data.school)
+        && validRole(request.resource.data.role)
+        && request.resource.data.by == request.auth.uid
+        && request.resource.data.exp is int;
+      allow delete: if signedIn() && isAdmin(resource.data.school);
+      allow update: if false;
+    }
+  }
+}
