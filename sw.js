@@ -1,4 +1,4 @@
-const C='tes-ifr-v15',A='tes-ifr-audio-1';
+const C='tes-ifr-v15b',A='tes-ifr-audio-1';
 self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./poh/poh.js','./poh/poh.css','./briefit/briefit.js','./briefit/briefit.css','./sched/sched.js','./sched/sched.css','./v14/v14.css','./v14/acct.js','./v14/logbook.js','./v14/area.js','./v15/vis.css','./v15/vis-core.js','./v15/vis-instr.js','./v15/vis-vor.js','./v15/vis-hold.js','./v15/vis-ils.js','./v15/vis-plate.js','./v15/vis-compass.js','./v15/vis-sd.js','./poh/pdfjs/pdf.min.mjs','./poh/pdfjs/pdf.worker.min.mjs'])).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C&&x!==A).map(x=>caches.delete(x)))).then(()=>self.clients.claim()).then(()=>{
   /* background: fetch all narration audio for offline use, a few at a time, without blocking the app */
